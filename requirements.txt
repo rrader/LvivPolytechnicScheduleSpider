@@ -1,0 +1,6 @@
+grab==0.4.13
+html2text==2014.12.29
+ipython==2.3.1
+lxml==3.4.1
+pycurl==7.19.5
+wsgiref==0.1.2

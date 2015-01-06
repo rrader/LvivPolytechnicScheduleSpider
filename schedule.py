@@ -114,7 +114,7 @@ class LPSpider(Spider):
             schedule[dayweek][number] = parseSubjectTable(html)
         if schedule:
             with codecs.open(u"out/{}-{}-{}-{}.json".format(task.inst_name, task.group_name, task.semestr, task.semest_part), "w", encoding='utf-8') as out:
-                json.dump(schedule, out, ensure_ascii=False, indent=2)
+                json.dump(schedule, out, ensure_ascii=False, indent=2, sort_keys=True)
         else:
             logging.info(u"Schedule for {}-{}-{}-{} is empty".format(task.inst_name, task.group_name, task.semestr, task.semest_part))
 
