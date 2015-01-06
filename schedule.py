@@ -44,9 +44,6 @@ def parseSubjectTable(html):
 
                 subject_content = h2t.handle(div.html())
                 room = [line.strip() for line in subject_content.split("\n") if line][-1]
-                # print(subject)
-                # assert len(subject) == 3
-                # oneSubjectSel.select("//b")
                 oneSubject.append({"name": name, "teacher": teacher, "room": room})
         subjects["week{}".format(weekid)] = oneSubject
 
@@ -124,38 +121,4 @@ class LPSpider(Spider):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     bot = LPSpider(thread_number=1)
-    #bot.setup_queue(backend="mongo", database="tvtropes-grab")
     bot.run()
-
-    # g = grab.Grab()
-    # g.go("http://www.lp.edu.ua/node/40?inst=1&group=6642&semestr=0&semest_part=1")
-    # dayweek = None
-    # schedule = {}
-    # for tr in g.doc.select('//div[@id="stud"]/table/tr'):
-    #     sel = Selector(fromstring(tr.html()))
-    #     if sel.select("./td").count() == 1:
-    #         dayweek = WEEKDAYS[sel.select("./td").text()]
-    #     if sel.select("./td").count() == 2:
-    #         number = sel.select("./td")[0].text()
-    #         html = sel.select("./td")[1].html()
-    #         # print(dayweek, number, html)
-    #         schedule[dayweek] = schedule.get(dayweek, {})
-    #         schedule[dayweek][number] = html
-    #     if sel.select("./td").count() == 3:
-    #         dayweek = WEEKDAYS[sel.select("./td")[0].text()]
-    #         number = sel.select("./td")[1].text()
-    #         html = sel.select("./td")[2].html()
-    #         # print(dayweek, number, html)
-    #         schedule[dayweek] = schedule.get(dayweek, {})
-    #         schedule[dayweek][number] = html
-    #     # print(sel.select("./td").count())
-    # print(json.dumps(schedule, ensure_ascii=False))
-
-    # html = schedule[1]["4"]
-    # print(html)
-    # # sel = Selector(fromstring(html))
-
-    # print(parseSubjectTable(html))
-
-    # # print(sel.select("//table//tr").count())
-    # # print(sel.select("//table//td").count())
