@@ -11,13 +11,13 @@ from lxml.html import fromstring
 from lxml import etree
 
 WEEKDAYS = {
-            u"Пн": 1,
-            u"Вт": 2,
-            u"Ср": 3,
-            u"Чт": 4,
-            u"Пт": 5,
-            u"Сб": 6,
-            u"Нд": 7,
+            u"Пн": "day1",
+            u"Вт": "day2",
+            u"Ср": "day3",
+            u"Чт": "day4",
+            u"Пт": "day5",
+            u"Сб": "day6",
+            u"Нд": "day7",
            }
 
 def parseSubjectTable(html):
@@ -38,10 +38,16 @@ def parseSubjectTable(html):
             if div.count() == 0:
                 oneSubject.append({})
             else:
+                oneSubjectSel = Selector(fromstring(div.html()))
+                name = oneSubjectSel.select("//b").text()
+                teacher = oneSubjectSel.select("//i").text()
+
                 subject_content = h2t.handle(div.html())
-                subject = [line.strip() for line in subject_content.split("\n") if line]
-                assert len(subject) == 3
-                oneSubject.append({"name": subject[0], "teacher": subject[1], "room": subject[2]})
+                room = [line.strip() for line in subject_content.split("\n") if line][-1]
+                # print(subject)
+                # assert len(subject) == 3
+                # oneSubjectSel.select("//b")
+                oneSubject.append({"name": name, "teacher": teacher, "room": room})
         subjects["week{}".format(weekid)] = oneSubject
 
     return subjects
@@ -111,7 +117,9 @@ class LPSpider(Spider):
             schedule[dayweek][number] = parseSubjectTable(html)
         if schedule:
             with codecs.open(u"out/{}-{}-{}-{}.json".format(task.inst_name, task.group_name, task.semestr, task.semest_part), "w", encoding='utf-8') as out:
-                json.dump(schedule, out, ensure_ascii=False)
+                json.dump(schedule, out, ensure_ascii=False, indent=2)
+        else:
+            logging.info(u"Schedule for {}-{}-{}-{} is empty".format(task.inst_name, task.group_name, task.semestr, task.semest_part))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
@@ -120,7 +128,7 @@ if __name__ == "__main__":
     bot.run()
 
     # g = grab.Grab()
-    # g.go("http://www.lp.edu.ua/node/40?inst=7&group=6980&semestr=0&semest_part=1")
+    # g.go("http://www.lp.edu.ua/node/40?inst=1&group=6642&semestr=0&semest_part=1")
     # dayweek = None
     # schedule = {}
     # for tr in g.doc.select('//div[@id="stud"]/table/tr'):
@@ -145,9 +153,9 @@ if __name__ == "__main__":
 
     # html = schedule[1]["4"]
     # print(html)
-    # sel = Selector(fromstring(html))
+    # # sel = Selector(fromstring(html))
 
-    # print(parseSubjectTable(sel))
+    # print(parseSubjectTable(html))
 
-    # print(sel.select("//table//tr").count())
-    # print(sel.select("//table//td").count())
+    # # print(sel.select("//table//tr").count())
+    # # print(sel.select("//table//td").count())
